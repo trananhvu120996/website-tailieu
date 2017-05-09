@@ -1,0 +1,20 @@
+﻿Có 2 trường hợp không được phép sửa:
+1 . Đăng nhập là admin thường mà sửa super
+2 . Đăng nhập là admin thường mà sửa admin mà admin đó không phải là chính mình
+----------------------------------------------------------------------
+Phân tích : 
+admin thường 			=> id != 1
+super				=> id == 1
+admin				=> level == 1
+không phải là chình mình 	=> id đang login != id xóa
+mà				=> &&
+----------------------------------------------------------------------
+Giải thuật :
+1 . id != 1 && id == 1
+2 . id != 1 && level == 2 && (id đang login != id xóa)
+----------------------------------------------------------------------
+Thu gọn giải thuật
+id != 1 && (id == 1 || (level == 1 && (id login != id xóa)))
+
+Thuật toán Laravel về User
+(Auth::user()->id != 1) && ($id == 1 || ($data["level"] == 2 && (Auth::user()->id != $id)))

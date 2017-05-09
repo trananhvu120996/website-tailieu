@@ -1,0 +1,52 @@
+							Quy trình xây dựng Website bằng Laravel
+Bước 1 - Phân tích dự án
+----------------------------- Chuẩn bị cho Database + Model ---------------------------------------
+Bước 2 - Tạo Database bằng phpMyAdmin
+Bước 3 - Xây dựng các bảng dữ liệu 
+		Cách 1 : Tạo bằng phpMyAdmin
+		Cách 2 : Tạo bằng Migrate trong Laravel
+			- Lệnh tạo Migrate : php artisan make:migration create_product_table --create=product
+			- Thực thi lệnh Migrate : php artisan migrate
+			- database/migrations/...product.php
+Bươc 4 - Xây dựng Model
+			- Lệnh tạo Model : php artisan make:model Product
+			- app/Product.php
+			- Khai báo bảng và cột có thể xử lý
+				protected $table = 'product';
+				protected $guarded = [];
+Bước 5 - Tạo dữ liệu mẫu bằng Seeder (Nếu cần)
+			- Lệnh tạo Seeder : php artisan make:seeder ProductTableSeeder
+			- database/seeds/ProductTableSeeder.php
+			- public function run()
+			{
+				DB::table('product')->insert(
+					[
+						[
+							'name' => 'Sản Phẩm 1',
+							'price' => 500000,
+						],
+						[
+							'username' => 'Sản Phẩm 2',
+							'password' => 100000,
+						],
+					]
+				);
+			}
+			- Gọi Class cần thực thi trong DatabaseSeeder : $this->call(ProductTableSeeder::class);
+			- Lệnh thực thi : php artisan db:seed
+-------------------------------- Xây dựng chức năng --------------------------------------------------
+Bước 6 : - Xây dựng View để nhận lấy dữ liệu (có thể dùng Blade Template)
+			- resources/views/product.blade.php
+Bước 7 : - Tạo Controller để quản lý các chức năng và trả giá trị cho View nếu cần
+			- Lệnh tạo Controller : php artisan make:controller ProductController
+			- app/Http/Controller/ProductController
+			- Thêm Model vào Controller : use App\Product;
+			- Xây dựng phương thức để lấy dữ liệu từ Model và trả ra View
+			 	public function getProduct () {
+					$data = Product::select('id','name','price')->get()->toArray();
+					return view('product',['product' => $data]);
+				}
+Bước 8 : - Tạo Router để điều hướng các Controller cũng như các phương thức (action)
+			- app/Http/routes.php
+			- Route::get('san-pham',['as' => 'getProduct', 'uses' => 'ProductController@getProduct']);
+Bước 9 : - Kiểm tra kết quả
